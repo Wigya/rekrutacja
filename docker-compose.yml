@@ -1,0 +1,38 @@
+version: "3"
+services:
+  client:
+    container_name: client
+    hostname: client
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+
+  server:
+    container_name: server
+    hostname: server
+    build:
+      context: "./server"
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://user:user123@postgres/db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    build:
+      context: postgres
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=user123
+      - POSTGRES_DB=db
+    ports:
+      - 5432:5432
